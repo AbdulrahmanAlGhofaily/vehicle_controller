@@ -80,10 +80,11 @@ class MainComp:
                         for data in scan:
                             angle = data[1]
                             distance = data[2]
+                            print(angle, distance)
                             self.filterData(angle, distance)
                             
                         self.voteDirection()
-                        print(f'Forward: {self.moveDir1}, Left: {self.moveDir2}, Back: {self.moveDir3}, Right: {self.moveDir4}')
+                        # print(f'Forward: {self.moveDir1}, Left: {self.moveDir2}, Back: {self.moveDir3}, Right: {self.moveDir4}')
                         self.moveVehicle()
                         self.clearDirectionData()
 
@@ -100,16 +101,16 @@ class MainComp:
 
     def filterData(self, angle: float, distance: float):
         try:
-            if(angle >= 0 and angle <= 90):
+            if(angle >= 330 and angle <= 30):
                 self.dir1.append(distance)
 
-            if(angle >= 90 and angle <= 180):
+            if(angle >= 260 and angle <= 330):
                 self.dir2.append(distance)
 
-            if(angle >= 180 and angle <= 270):
+            if(angle >= 100 and angle <= 260):
                 self.dir3.append(distance)
 
-            if(angle >= 270 and angle <= 360):
+            if(angle >= 30 and angle <= 100):
                 self.dir4.append(distance)
             
             return
@@ -126,28 +127,28 @@ class MainComp:
             avg4 = self.directionAvg(self.dir4)
             # print(avg1, avg2, avg3 ,avg4)
 
-            if(not avg1 is None and avg1 >= 250):
+            if(not avg1 is None and avg1 >= 500):
                 self.moveDir1 = True
                 self.moveDir2 = False
                 self.moveDir3 = False
                 self.moveDir4 = False
                 return
             
-            if(not avg2 is None and avg2 >= 250 and (not avg4 is None and avg2 >= avg4)):
+            if(not avg2 is None and avg2 >= 500 and (not avg4 is None and avg2 >= avg4)):
                 self.moveDir1 = False
                 self.moveDir2 = True
                 self.moveDir3 = False
                 self.moveDir4 = False
                 return
             
-            if(not avg4 is None and avg4 >= 250 and (not avg2 is None and avg4 >= avg2)):
+            if(not avg4 is None and avg4 >= 500 and (not avg2 is None and avg4 >= avg2)):
                 self.moveDir1 = False
                 self.moveDir2 = False
                 self.moveDir3 = False
                 self.moveDir4 = True
                 return
 
-            if(not avg3 is None and avg3 >= 250):
+            if(not avg3 is None and avg3 >= 500):
                 self.moveDir1 = False
                 self.moveDir2 = False
                 self.moveDir3 = True
@@ -205,36 +206,36 @@ class MainComp:
     def moveVehicle(self):
         print(self.moveDir1)
         if(self.moveDir1):
-            self.PwmLeft.start(50)
+            self.PwmLeft.start(100)
             GPIO.output(self.leftMotor, True)
             GPIO.output(self.leftMotorOpp, False)
-            self.PwmRight.start(50)
+            self.PwmRight.start(100)
             GPIO.output(self.rightMotorOpp, True)
             GPIO.output(self.rightMotor, False)
 
         elif(self.moveDir2):
-            self.PwmLeft.start(20)
-            GPIO.output(self.leftMotor, True)
-            GPIO.output(self.leftMotorOpp, False)
-            self.PwmRight.start(50)
+            self.PwmLeft.start(70)
+            GPIO.output(self.leftMotor, False)
+            GPIO.output(self.leftMotorOpp, True)
+            self.PwmRight.start(70)
             GPIO.output(self.rightMotorOpp, True)
             GPIO.output(self.rightMotor, False)
 
         elif(self.moveDir3):
-            self.PwmLeft.start(20)
+            self.PwmLeft.start(50)
             GPIO.output(self.leftMotor, False)
             GPIO.output(self.leftMotorOpp, True)
-            self.PwmRight.start(20)
+            self.PwmRight.start(50)
             GPIO.output(self.rightMotorOpp, False)
             GPIO.output(self.rightMotor, True)
 
         elif(self.moveDir4):
-            self.PwmLeft.start(50)
+            self.PwmLeft.start(70)
             GPIO.output(self.leftMotor, True)
             GPIO.output(self.leftMotorOpp, False)
-            self.PwmRight.start(20)
-            GPIO.output(self.rightMotorOpp, True)
-            GPIO.output(self.rightMotor, False)
+            self.PwmRight.start(70)
+            GPIO.output(self.rightMotorOpp, False)
+            GPIO.output(self.rightMotor, True)
             
 
 
